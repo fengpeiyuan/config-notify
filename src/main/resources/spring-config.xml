@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	">
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config-cron.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="redisShard" class="com.config_notify.rpc.redis.RedisShard" init-method="buildShardPool" scope="singleton">
+		<property name="maxActive" value="${redis.maxActive}"/>
+		<property name="maxIdle" value="${redis.maxIdle}"/>
+		<property name="maxWait" value="${redis.maxWait}"/>
+		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+		<property name="timeout" value="${redis.timeout}"/>
+		<!-- host:port:password[可选,password中不要有":"],-->
+		<property name="confStr" value="${redis.connection}"/>
+	</bean>
+
+	<bean id="redisDao" class="com.config_notify.bizdao_demo.RedisDao">
+		<property name="redisShard" ref="redisShard"/>
+	</bean>
+
+
+	<bean id="configChangeObserver" class="com.config_notify.core.impl.RedisConfigChangeObserver">
+		<property ref="redisShard" name="redisShard"/>
+	</bean>
+
+
+	<bean id="observableMonitor" class="com.config_notify.core.impl.ZkObservableMonitor">
+		<constructor-arg index="0" value="${zk.hostport}"/>
+		<constructor-arg index="1" value="${zk.znode}"/>
+		<constructor-arg index="2" ref="configChangeObserver"/>
+	</bean>
+
+	<bean id="configInstance" class="com.config_notify.core.ConfigInstance">
+		<constructor-arg ref="observableMonitor"/>
+	</bean>
+
+	<!--
+	<bean id="observableCron" class="com.config_notifyfy.core.impl.ConsulCronImpl	<property ref="redisShard" name="redisShard"/>
+		<property name="connUrl" value="${consul.connUrl}"/>
+		<constructor-arg ref="configChangeObserver"/>
+	</bean>
+
+	<bean id="configCronInstance" class="com.config_notifyfy.core.ConfigCronInstance">
+		<constructor-arg ref="observableCron"/>
+    </bean>
+	-->
+	
+</beans>
