@@ -31,8 +31,6 @@ public class ZkObservableMonitor extends ObservableMonitor implements Watcher, S
         zk.exists(znode, true, this, null);
     }
 
-
-
     public void process(WatchedEvent event) {
         String path = event.getPath();
         if (event.getType() == Event.EventType.None) {
@@ -90,10 +88,9 @@ public class ZkObservableMonitor extends ObservableMonitor implements Watcher, S
                 return;
             }
         }
-        if ((b == null && b != prevData)
-                || (b != null && !Arrays.equals(prevData, b))) {
-            logger.equals("~~~~~~~~"+b.toString());
-            this.getData().put("confStr",new String(b));
+        if ((b == null && b != prevData) || (b != null && !Arrays.equals(prevData, b))) {
+            if(b!=null)
+                this.getData().put("confStr",new String(b));
             setChanged();
             notifyObservers();
             prevData = b;

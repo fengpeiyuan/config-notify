@@ -1,9 +1,6 @@
-package com.config_notify.core;
+package com.config_notify.demo;
 
 
-import com.config_notify.demo.RedisDao;
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
@@ -11,15 +8,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public class BizMain {
+    private static ClassPathXmlApplicationContext context;
+    private static ScheduledExecutorService service;
+    private static RedisDao redisDao;
 
-public class ConfigTest {
-    private ClassPathXmlApplicationContext context;
-    private ScheduledExecutorService service;
-    private RedisDao redisDao;
-    @Before
-    public void setup(){
+    public static void main(String[] args){
         context = new ClassPathXmlApplicationContext(new String[] {"spring-config.xml"});
         context.start();
         redisDao=(RedisDao) context.getBean("redisDao");
@@ -31,10 +25,8 @@ public class ConfigTest {
                 System.out.println(restDemo);
             }
         }, 1, 1, TimeUnit.SECONDS);
-    }
 
-    @Test
-    public void testGetDemo(){
+
         context.getBean("configInstance");
         System.out.print("running...");
         try {
@@ -42,10 +34,8 @@ public class ConfigTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        assertEquals(ret,value);
+
     }
-
-
 
 
 }

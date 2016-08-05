@@ -15,10 +15,4 @@ public class ConfigCronInstance {
         service.scheduleAtFixedRate(observableCron, 1, 1, TimeUnit.SECONDS);
     }
 
-
-
-
-
-
-
 }

@@ -137,7 +137,8 @@ public class RedisShard {
         try {
             j = pool.getResource();
             byte[] r = j.getShard(key).get(key.getBytes("UTF-8"));
-            result = new String(r, Charset.forName("UTF-8"));
+            if(r!=null)
+                result = new String(r, Charset.forName("UTF-8"));
         } catch (Exception ex) {
             flag = false;
             pool.returnBrokenResource(j);

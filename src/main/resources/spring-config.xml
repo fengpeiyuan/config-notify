@@ -7,7 +7,7 @@
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>classpath:config-cron.properties</value>
+				<value>classpath:config.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -22,35 +22,23 @@
 		<property name="confStr" value="${redis.connection}"/>
 	</bean>
 
-	<bean id="redisDao" class="com.config_notify.bizdao_demo.RedisDao">
+	<bean id="redisDao" class="com.config_notify.demo.RedisDao">
 		<property name="redisShard" ref="redisShard"/>
 	</bean>
 
-
-	<bean id="configChangeObserver" class="com.config_notify.core.impl.RedisConfigChangeObserver">
+	<bean id="configMonitorObserver" class="com.config_notify.core.impl.RedisConfigMonitorObserver">
 		<property ref="redisShard" name="redisShard"/>
 	</bean>
-
 
 	<bean id="observableMonitor" class="com.config_notify.core.impl.ZkObservableMonitor">
 		<constructor-arg index="0" value="${zk.hostport}"/>
 		<constructor-arg index="1" value="${zk.znode}"/>
-		<constructor-arg index="2" ref="configChangeObserver"/>
+		<constructor-arg index="2" ref="configMonitorObserver"/>
 	</bean>
 
 	<bean id="configInstance" class="com.config_notify.core.ConfigInstance">
 		<constructor-arg ref="observableMonitor"/>
 	</bean>
 
-	<!--
-	<bean id="observableCron" class="com.config_notifyfy.core.impl.ConsulCronImpl	<property ref="redisShard" name="redisShard"/>
-		<property name="connUrl" value="${consul.connUrl}"/>
-		<constructor-arg ref="configChangeObserver"/>
-	</bean>
 
-	<bean id="configCronInstance" class="com.config_notifyfy.core.ConfigCronInstance">
-		<constructor-arg ref="observableCron"/>
-    </bean>
-	-->
-	
 </beans>

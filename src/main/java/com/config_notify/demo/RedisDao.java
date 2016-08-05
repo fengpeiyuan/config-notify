@@ -1,4 +1,4 @@
-package com.config_notify.bizdao_demo;
+package com.config_notify.demo;
 
 
 import com.config_notify.rpc.redis.RedisShard;
