@@ -17,7 +17,7 @@ public class RedisConfigMonitorObserver implements ConfigChangeObserver {
         ObservableMonitor observableMonitor=(ObservableMonitor)o;
         String currConfigStr=observableMonitor.getData().get("confStr").toString();
         logger.error("@@@@@ ObservableMonitor Switch Redis Connections Start! currConfigStr:"+currConfigStr);
-        //System.out.println("@@@@@ Switch Redis Connections Start! currConfigStr:"+currConfigStr);
+        redisShard.getPool().destroy();
         redisShard.buildShardPool(currConfigStr);
         logger.error("@@@@@ ObservableMonitor Switch Redis Connections Finished! currConfigStr:"+currConfigStr);
 
