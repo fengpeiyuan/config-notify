@@ -34,6 +34,8 @@
 		<constructor-arg index="0" value="${zk.hostport}"/>
 		<constructor-arg index="1" value="${zk.znode}"/>
 		<constructor-arg index="2" ref="configMonitorObserver"/>
+		<constructor-arg index="3" value="${zk.user}"/>
+		<constructor-arg index="4" value="${zk.passwd}"/>
 	</bean>
 
 	<bean id="configInstance" class="com.config_notify.core.ConfigInstance">

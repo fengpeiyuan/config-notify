@@ -21,13 +21,18 @@ public class ZkObservableMonitor extends ObservableMonitor implements Watcher, S
     private byte prevData[];
     private String znode;
     private String hostport;
+    private String user;
+    private String passwd;
 
 
-    public ZkObservableMonitor(String hostport, String znode,ConfigChangeObserver configChangeObserver) throws IOException {
+    public ZkObservableMonitor(String hostport, String znode,ConfigChangeObserver configChangeObserver,String user,String passwd) throws IOException {
         super(configChangeObserver);
         this.hostport = hostport;
         this.znode = znode;
+        this.user = user;
+        this.passwd = passwd;
         this.zk = new ZooKeeper(this.hostport,60000,this);
+        this.zk.addAuthInfo("digest",(this.user+":"+this.passwd).getBytes());
         zk.exists(znode, true, this, null);
     }
 
